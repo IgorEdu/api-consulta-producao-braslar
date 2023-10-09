@@ -31,7 +31,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("odfs")
-// @SecurityRequirement(name = "bearer-key")
 public class OdfController {
 
     @Autowired
@@ -45,7 +44,6 @@ public class OdfController {
         ObjectMapper mapper = new ObjectMapper();
         List<ResponseEntity<DadosDetalhamentoOdf>> retornos = new ArrayList<>();
 
-        // @SuppressWarnings("unchecked")
         ListaOdfs odfs = mapper.readValue(dados, ListaOdfs.class);
 
         for (int i = 0; i < odfs.getSize(); i++) {
@@ -57,9 +55,6 @@ public class OdfController {
                 var odf = new Odf(odfs.getOdfs().get(i));
                 repository.save(odf);
 
-                // var uri = uriBuilder.path("/odf/{id}").buildAndExpand(odf.getId()).toUri();
-                // retornos.add(ResponseEntity.created(uriBuilder.path("/odf/{id}").buildAndExpand(odf.getId()).toUri())
-                // .body(new DadosDetalhamentoOdf(odf)));
                 retornos.add(ResponseEntity.created(null).body(new DadosDetalhamentoOdf(odf)));
             }
         }
@@ -71,8 +66,7 @@ public class OdfController {
     public ResponseEntity<Page<DadosListagemOdf>> listar(
             @PageableDefault(size = 10, sort = { "odf" }) Pageable paginacao) {
         var page = repository.findAll(paginacao).map(DadosListagemOdf::new);
-        // var page =
-        // repository.findAllByAtivoTrue(paginacao).map(DadosListagemOdf::new);
+
         return ResponseEntity.ok(page);
     }
 
@@ -84,28 +78,6 @@ public class OdfController {
 
         return ResponseEntity.ok(new DadosDetalhamentoOdf(odfAtualizar));
     }
-
-    /*
-     * @PutMapping
-     * 
-     * @Transactional
-     * public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoProduto
-     * dados) {
-     * var paciente = repository.getReferenceById(dados.id());
-     * paciente.atualizarInformacoes(dados);
-     * 
-     * return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
-     * }
-     */
-
-    // @DeleteMapping("/{id}")
-    // @Transactional
-    // public ResponseEntity excluir(@PathVariable Long id) {
-    // var produto = repository.getReferenceById(id);
-    // produto.excluir();
-
-    // return ResponseEntity.noContent().build();
-    // }
 
     @GetMapping("/{odf}")
     public ResponseEntity<DadosDetalhamentoOdf> detalhar(@PathVariable String numOdf) {
