@@ -32,7 +32,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("etiquetas")
-// @SecurityRequirement(name = "bearer-key")
 public class EtiquetaController {
 
     @Autowired
@@ -40,20 +39,13 @@ public class EtiquetaController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid String dados, UriComponentsBuilder uriBuilder)
+    public ResponseEntity<List<ResponseEntity<DadosDetalhamentoEtiqueta>>> cadastrar(@RequestBody @Valid String dados,
+            UriComponentsBuilder uriBuilder)
             throws JsonMappingException, JsonProcessingException {
-        // var etiqueta = new Etiqueta(dados);
-        // repository.save(etiqueta);
-
-        // var uri =
-        // uriBuilder.path("/etiqueta/{id}").buildAndExpand(etiqueta.getId()).toUri();
-        // return ResponseEntity.created(uri).body(new
-        // DadosDetalhamentoEtiqueta(etiqueta));
 
         ObjectMapper mapper = new ObjectMapper();
         List<ResponseEntity<DadosDetalhamentoEtiqueta>> retornos = new ArrayList<>();
 
-        @SuppressWarnings("unchecked")
         ListaEtiquetas etiquetas = mapper.readValue(dados, ListaEtiquetas.class);
 
         for (int i = 0; i < etiquetas.getSize(); i++) {
@@ -65,10 +57,6 @@ public class EtiquetaController {
                 var etiqueta = new Etiqueta(etiquetas.getEtiquetas().get(i));
                 repository.save(etiqueta);
 
-                // var uri =
-                // uriBuilder.path("/etiqueta/{id}").buildAndExpand(etiqueta.getId()).toUri();
-                // retornos.add(ResponseEntity.created(uri).body(new
-                // DadosDetalhamentoEtiqueta(etiqueta)));
                 retornos.add(ResponseEntity.created(null).body(new DadosDetalhamentoEtiqueta(etiqueta)));
             }
         }
@@ -93,35 +81,8 @@ public class EtiquetaController {
         return ResponseEntity.ok(page);
     }
 
-    // public ResponseEntity atualizar(CadastroEtiquetaDTO dados) {
-    // var etiquetaAtualizar = repository.getReferenceById(null);
-    // etiquetaAtualizar.setBip(dados.bip());
-    // repository.save(etiquetaAtualizar);
-
-    // return ResponseEntity.ok(new DadosDetalhamentoEtiqueta(etiquetaAtualizar));
-    // }
-
-    // @PutMapping
-    // @Transactional
-    // public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoProduto
-    // dados) {
-    // var paciente = repository.getReferenceById(dados.id());
-    // paciente.atualizarInformacoes(dados);
-
-    // return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
-    // }
-
-    // @DeleteMapping("/{id}")
-    // @Transactional
-    // public ResponseEntity excluir(@PathVariable Long id) {
-    // var etiqueta = repository.getReferenceById(id);
-    // etiqueta.excluir();
-
-    // return ResponseEntity.noContent().build();
-    // }
-
     @GetMapping("/{serie}")
-    public ResponseEntity detalhar(@PathVariable String serie) {
+    public ResponseEntity<DadosDetalhamentoEtiqueta> detalhar(@PathVariable String serie) {
         Etiqueta etiqueta = repository.getReferenceBySerie(serie);
         return ResponseEntity.ok(new DadosDetalhamentoEtiqueta(etiqueta));
     }
