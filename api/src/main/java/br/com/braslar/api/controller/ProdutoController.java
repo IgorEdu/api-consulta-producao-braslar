@@ -32,7 +32,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("produtos")
-// @SecurityRequirement(name = "bearer-key")
 public class ProdutoController {
 
     @Autowired
@@ -40,14 +39,13 @@ public class ProdutoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(
+    public ResponseEntity<List<ResponseEntity<DadosDetalhamentoProduto>>> cadastrar(
             @RequestBody @Valid String dados,
             UriComponentsBuilder uriBuilder) throws JsonMappingException, JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
         List<ResponseEntity<DadosDetalhamentoProduto>> retornos = new ArrayList<>();
 
-        @SuppressWarnings("unchecked")
         ListaProdutos produtos = mapper.readValue(dados, ListaProdutos.class);
 
         for (int i = 0; i < produtos.getSize(); i++) {
@@ -59,11 +57,6 @@ public class ProdutoController {
             } else {
                 var produto = new Produto(produtos.getProdutos().get(i));
                 repository.save(produto);
-
-                // var uri =
-                // uriBuilder.path("/produtos/{id}").buildAndExpand(produto.getId()).toUri();
-                // retornos.add(ResponseEntity.created(uri).body(new
-                // DadosDetalhamentoProduto(produto)));
                 retornos.add(ResponseEntity.created(null).body(new DadosDetalhamentoProduto(produto)));
 
             }
@@ -75,8 +68,6 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<Page<DadosListagemProduto>> listar(
             @PageableDefault(size = 10, sort = { "codigo" }) Pageable paginacao) {
-        // var page =
-        // repository.findAllByAtivoTrue(paginacao).map(DadosListagemProduto::new);
         var page = repository.findAll(paginacao).map(DadosListagemProduto::new);
         return ResponseEntity.ok(page);
     }
@@ -92,28 +83,6 @@ public class ProdutoController {
 
         return ResponseEntity.ok(new DadosDetalhamentoProduto(produtoAtualizar));
     }
-
-    /*
-     * @PutMapping
-     * 
-     * @Transactional
-     * public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoProduto
-     * dados) {
-     * var paciente = repository.getReferenceById(dados.id());
-     * paciente.atualizarInformacoes(dados);
-     * 
-     * return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
-     * }
-     */
-
-    // @DeleteMapping("/{id}")
-    // @Transactional
-    // public ResponseEntity excluir(@PathVariable Long id) {
-    // var produto = repository.getReferenceById(id);
-    // produto.excluir();
-
-    // return ResponseEntity.noContent().build();
-    // }
 
     @GetMapping("/{id}")
     public ResponseEntity<DadosDetalhamentoProduto> detalhar(@PathVariable String id) {
