@@ -1,3 +1,7 @@
 target/
 .vscode
-docker-compose.yml
+/.vscode
+api/docker-compose.yml
+api/.vscode
+api/resources/application.properties
+comandos-docker.txt
