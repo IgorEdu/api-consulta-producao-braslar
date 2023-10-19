@@ -76,11 +76,32 @@ public class ProdutoController {
 
         var produtoAtualizar = repository.getReferenceById(id);
         produtoAtualizar.setDescricao(cadastroProdutoDTO.descricao());
-        produtoAtualizar.setQuantidade(new BigDecimal(cadastroProdutoDTO.quantidade()));
-        produtoAtualizar.setEstoqueMinimo(new BigDecimal(cadastroProdutoDTO.estoqueMinimo()));
-        produtoAtualizar.setEstoqueMaximo(new BigDecimal(cadastroProdutoDTO.estoqueMaximo()));
-        repository.save(produtoAtualizar);
+        // produtoAtualizar.setQuantidade(new
+        // BigDecimal(cadastroProdutoDTO.quantidade()));
+        // produtoAtualizar.setEstoqueMinimo(new
+        // BigDecimal(cadastroProdutoDTO.estoqueMinimo()));
+        // produtoAtualizar.setEstoqueMaximo(new
+        // BigDecimal(cadastroProdutoDTO.estoqueMaximo()));
 
+        if (!cadastroProdutoDTO.quantidade().isBlank()) {
+            produtoAtualizar.setQuantidade(new BigDecimal(cadastroProdutoDTO.quantidade()));
+        } else {
+            produtoAtualizar.setQuantidade(new BigDecimal(0));
+        }
+
+        if (!cadastroProdutoDTO.estoqueMinimo().isBlank()) {
+            produtoAtualizar.setEstoqueMinimo(new BigDecimal(cadastroProdutoDTO.estoqueMinimo()));
+        } else {
+            produtoAtualizar.setEstoqueMinimo(new BigDecimal(0));
+        }
+
+        if (!cadastroProdutoDTO.estoqueMaximo().isBlank()) {
+            produtoAtualizar.setEstoqueMaximo(new BigDecimal(cadastroProdutoDTO.estoqueMaximo()));
+        } else {
+            produtoAtualizar.setEstoqueMaximo(new BigDecimal(0));
+        }
+
+        repository.save(produtoAtualizar);
         return ResponseEntity.ok(new DadosDetalhamentoProduto(produtoAtualizar));
     }
 

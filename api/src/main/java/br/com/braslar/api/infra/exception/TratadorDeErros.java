@@ -4,6 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,6 +19,8 @@ import br.com.braslar.api.domain.ValidacaoException;
 
 @RestControllerAdvice
 public class TratadorDeErros {
+
+    private final Logger logger = LoggerFactory.getLogger(TratadorDeErros.class);
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> tratarErro404() {
@@ -58,6 +62,8 @@ public class TratadorDeErros {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> tratarErro500(Exception ex) {
+        var message = "Erro inesperado no servidor, verifique os logs.";
+        logger.error(message, ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + ex.getLocalizedMessage());
     }
 

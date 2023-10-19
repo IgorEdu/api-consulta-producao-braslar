@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.braslar.api.domain.DTO.CadastroEtiquetaDTO;
 import br.com.braslar.api.domain.etiqueta.DadosDetalhamentoEtiqueta;
@@ -44,6 +45,8 @@ public class EtiquetaController {
             throws JsonMappingException, JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         List<ResponseEntity<DadosDetalhamentoEtiqueta>> retornos = new ArrayList<>();
 
         ListaEtiquetas etiquetas = mapper.readValue(dados, ListaEtiquetas.class);

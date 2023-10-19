@@ -55,21 +55,25 @@ public class Produto {
         this.local = new BigInteger(dados.local());
         this.quantidade = new BigDecimal(dados.quantidade());
         this.estoqueMinimo = new BigDecimal(dados.estoqueMinimo());
-        this.estoqueMaximo = new BigDecimal(dados.estoqueMaximo());
-    }
-
-    public void atualizarInformacoes(CadastroProdutoDTO dados) {
-        if (!new BigDecimal(dados.quantidade()).equals(0.0)) {
-            this.quantidade = new BigDecimal(dados.quantidade());
-        }
-        if (!new BigDecimal(dados.estoqueMinimo()).equals(0.0)) {
-            this.estoqueMinimo = new BigDecimal(dados.estoqueMinimo());
-        }
-        if (!new BigDecimal(dados.estoqueMaximo()).equals(0.0)) {
+        if (!dados.estoqueMaximo().isBlank()) {
             this.estoqueMaximo = new BigDecimal(dados.estoqueMaximo());
+        } else {
+            this.estoqueMaximo = new BigDecimal(0);
         }
-
     }
+
+    // public void atualizarInformacoes(CadastroProdutoDTO dados) {
+    // if (!new BigDecimal(dados.quantidade()).equals(0.0)) {
+    // this.quantidade = new BigDecimal(dados.quantidade());
+    // }
+    // if (!new BigDecimal(dados.estoqueMinimo()).equals(0.0)) {
+    // this.estoqueMinimo = new BigDecimal(dados.estoqueMinimo());
+    // }
+    // if (!new BigDecimal(dados.estoqueMaximo()).equals(0.0)) {
+    // this.estoqueMaximo = new BigDecimal(dados.estoqueMaximo());
+    // }
+
+    // }
 
     // public void excluir() {
     // this.ativo = false;

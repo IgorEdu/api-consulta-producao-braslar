@@ -1,7 +1,9 @@
 package br.com.braslar.api.domain.etiqueta;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.braslar.api.domain.DTO.CadastroEtiquetaDTO;
@@ -32,8 +34,10 @@ public class Etiqueta {
 
     private String odf;
 
+    @Setter
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "data_apontamento")
-    private String dataApontamento;
+    private LocalDateTime dataApontamento;
 
     @Setter
     @JsonProperty("Bip")
