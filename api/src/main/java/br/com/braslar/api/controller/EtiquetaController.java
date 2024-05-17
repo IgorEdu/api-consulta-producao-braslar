@@ -72,6 +72,7 @@ public class EtiquetaController {
         var etiquetaAtualizar = repository.getReferenceById(idEtiqueta);
         etiquetaAtualizar.setBip(dados.bip());
         etiquetaAtualizar.setQuantidadeUtilizada(new BigDecimal(dados.quantidadeUtilizada()));
+        etiquetaAtualizar.setDataApontamento(dados.dataApontamento());
         repository.save(etiquetaAtualizar);
 
         return ResponseEntity.ok(new DadosDetalhamentoEtiqueta(etiquetaAtualizar));

@@ -1,0 +1,1 @@
+alter table etiquetas add unique(serie);

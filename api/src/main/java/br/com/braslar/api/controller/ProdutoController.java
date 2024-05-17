@@ -48,18 +48,14 @@ public class ProdutoController {
 
         ListaProdutos produtos = mapper.readValue(dados, ListaProdutos.class);
 
-        for (int i = 0; i < produtos.getSize(); i++) {
-            String idProduto = repository.findIdByCodigoAndEmpresaAndLocal(
-                    produtos.getProdutos().get(i).codigo(),
-                    produtos.getProdutos().get(i).empresa(), produtos.getProdutos().get(i).local());
-            if (idProduto != null) {
-                retornos.add(atualizar(produtos.getProdutos().get(i), idProduto));
-            } else {
-                var produto = new Produto(produtos.getProdutos().get(i));
-                repository.save(produto);
-                retornos.add(ResponseEntity.created(null).body(new DadosDetalhamentoProduto(produto)));
+        repository.flush();
+        repository.deleteAll();
 
-            }
+
+        for (int i = 0; i < produtos.getSize(); i++) {
+            var produto = new Produto(produtos.getProdutos().get(i));
+            repository.save(produto);
+            retornos.add(ResponseEntity.created(null).body(new DadosDetalhamentoProduto(produto)));
         }
 
         return ResponseEntity.ok().body(retornos);
@@ -71,40 +67,6 @@ public class ProdutoController {
         var page = repository.findAll(paginacao).map(DadosListagemProduto::new);
         return ResponseEntity.ok(page);
     }
-
-    public ResponseEntity<DadosDetalhamentoProduto> atualizar(CadastroProdutoDTO cadastroProdutoDTO, String id) {
-
-        var produtoAtualizar = repository.getReferenceById(id);
-        produtoAtualizar.setDescricao(cadastroProdutoDTO.descricao());
-        // produtoAtualizar.setQuantidade(new
-        // BigDecimal(cadastroProdutoDTO.quantidade()));
-        // produtoAtualizar.setEstoqueMinimo(new
-        // BigDecimal(cadastroProdutoDTO.estoqueMinimo()));
-        // produtoAtualizar.setEstoqueMaximo(new
-        // BigDecimal(cadastroProdutoDTO.estoqueMaximo()));
-
-        if (!cadastroProdutoDTO.quantidade().isBlank()) {
-            produtoAtualizar.setQuantidade(new BigDecimal(cadastroProdutoDTO.quantidade()));
-        } else {
-            produtoAtualizar.setQuantidade(new BigDecimal(0));
-        }
-
-        if (!cadastroProdutoDTO.estoqueMinimo().isBlank()) {
-            produtoAtualizar.setEstoqueMinimo(new BigDecimal(cadastroProdutoDTO.estoqueMinimo()));
-        } else {
-            produtoAtualizar.setEstoqueMinimo(new BigDecimal(0));
-        }
-
-        if (!cadastroProdutoDTO.estoqueMaximo().isBlank()) {
-            produtoAtualizar.setEstoqueMaximo(new BigDecimal(cadastroProdutoDTO.estoqueMaximo()));
-        } else {
-            produtoAtualizar.setEstoqueMaximo(new BigDecimal(0));
-        }
-
-        repository.save(produtoAtualizar);
-        return ResponseEntity.ok(new DadosDetalhamentoProduto(produtoAtualizar));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<DadosDetalhamentoProduto> detalhar(@PathVariable String id) {
         Produto produto = repository.getReferenceById(id);
