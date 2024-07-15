@@ -18,6 +18,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
             """)
     String findIdByCodigoAndEmpresaAndLocal(String codigo, String empresa, String local);
 
-    @Query("DELETE FROM Produto")
-    void deleteProdutos();
+    @Query("DELETE FROM Produto p")
+    void deleteProduto();
 }

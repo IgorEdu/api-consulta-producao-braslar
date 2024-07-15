@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,7 +49,7 @@ public class ProdutoController {
         ListaProdutos produtos = mapper.readValue(dados, ListaProdutos.class);
 
         repository.flush();
-        repository.deleteProdutos();
+        repository.deleteProduto();
 
 
         for (int i = 0; i < produtos.getSize(); i++) {
