@@ -17,4 +17,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
             and p.local = :local
             """)
     String findIdByCodigoAndEmpresaAndLocal(String codigo, String empresa, String local);
+
+    @Query("DELETE FROM Produto")
+    void deleteProdutos();
 }
