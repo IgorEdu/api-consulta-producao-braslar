@@ -49,7 +49,7 @@ public class ProdutoController {
         ListaProdutos produtos = mapper.readValue(dados, ListaProdutos.class);
 
         repository.flush();
-        repository.deleteAll();
+        repository.deleteProduto();
 
 
         for (int i = 0; i < produtos.getSize(); i++) {
